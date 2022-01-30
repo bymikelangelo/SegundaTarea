@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="interpoladores">
+        <item>AccelerateDecelerateInterpolator</item>
+        <item>AccelerateInterpolator</item>
+        <item>BounceInterpolator</item>
+        <item>OvershootInterpolator</item>
+        <item>LinearInterpolator</item>
+    </array>
+
+    <array name="movimientos">
+        <item>ALPHA</item>
+        <item>ROTATION</item>
+        <item>ROTATION_X</item>
+        <item>ROTATION_Y</item>
+        <item>SCALE_X</item>
+        <item>SCALE_Y</item>
+        <item>TRANSLATION_X</item>
+        <item>TRANSLATION_Y</item>
+        <item>TRANSLATION_Z</item>
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>
+    </array>
+
+</resources>
