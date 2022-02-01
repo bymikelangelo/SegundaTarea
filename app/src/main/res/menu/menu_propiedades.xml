@@ -6,5 +6,5 @@
         android:title="Elegir interpolador" />
     <item
         android:id="@+id/tipo_mov"
-        android:title="Elegir movimiento" />
+        android:title="Elegir tipo movimiento" />
 </menu>
