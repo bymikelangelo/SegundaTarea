@@ -21,14 +21,14 @@ public class AnimacionImagenes extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_opciones, menu);
-        menu.removeItem(R.id.animacion_imag);
+        menu.removeItem(R.id.opcion_animacion_imag);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.animacion_prop:
+            case R.id.opcion_animacion_prop:
                 Intent intencion = new Intent(this, MainActivity.class);
                 startActivity(intencion);
                 return true;

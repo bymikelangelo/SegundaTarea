@@ -3,9 +3,13 @@
     <array name="interpoladores">
         <item>AccelerateDecelerateInterpolator</item>
         <item>AccelerateInterpolator</item>
+        <item>AnticipateInterpolator</item>
+        <item>AnticipateOvershootInterpolator</item>
         <item>BounceInterpolator</item>
-        <item>OvershootInterpolator</item>
         <item>LinearInterpolator</item>
+        <item>CycleInterpolator</item>
+        <item>DecelerateInterpolator</item>
+        <item>OvershootInterpolator</item>
     </array>
 
     <array name="movimientos">
@@ -15,12 +19,8 @@
         <item>ROTATION_Y</item>
         <item>SCALE_X</item>
         <item>SCALE_Y</item>
-        <item>TRANSLATION_X</item>
-        <item>TRANSLATION_Y</item>
-        <item>TRANSLATION_Z</item>
         <item>X</item>
         <item>Y</item>
-        <item>Z</item>
         <item>Escalar</item>
     </array>
 

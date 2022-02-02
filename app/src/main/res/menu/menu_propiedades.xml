@@ -2,9 +2,12 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/tipo_interpol"
+        android:id="@+id/opcion_interpol"
         android:title="Elegir interpolador" />
     <item
-        android:id="@+id/tipo_mov"
-        android:title="Elegir tipo movimiento" />
+        android:id="@+id/opcion_anim_predet"
+        android:title="Anim. predeterminadas" />
+    <item
+        android:id="@+id/opcion_anim_pers"
+        android:title="Anim. personalizadas" />
 </menu>
