@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Build;
@@ -63,26 +65,21 @@ public class MainActivity extends AppCompatActivity {
         arrayMovimientos = new ArrayAdapter(this, android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.movimientos));
         listAtrib = findViewById(R.id.listAtrib);
-        listAtrib.setAdapter(arrayMovimientos);
-        listAtrib.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                cambiarAnimacionPred(position);
-            }
-        });
+//        listAtrib.setAdapter(arrayMovimientos);
+//        listAtrib.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                cambiarAnimacionPred(position);
+//            }
+//        });
 
         imageMario = findViewById(R.id.imageMario);
         registerForContextMenu(imageMario);
-        imageMario.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-            @Override
-            public void onClick(View v) {
-                empezarAnimacion();
-            }
-        });
+        mostrarInstrucciones("Mantén pulsado en la imagen para ver el menú de selección.");
     }
 
+    //método creador del menu de opciones
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -91,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //Listener del menu de opciones de la barra superior
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -105,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //creador del menú contextual
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -113,9 +111,11 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_propiedades, menu);
     }
 
+    //selector de opciones del menú contextual
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            //elegir interpoladores
             case R.id.opcion_interpol:
                 editValorIni.setVisibility(View.INVISIBLE);
                 editTiempo.setVisibility(View.INVISIBLE);
@@ -134,10 +134,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 break;
+            //elegir animaciones predeterminadas
             case R.id.opcion_anim_predet:
                 editValorIni.setVisibility(View.INVISIBLE);
                 editValorFin.setVisibility(View.INVISIBLE);
                 editTiempo.setVisibility(View.INVISIBLE);
+                if (arrayMovimientos == null) {
+                    arrayMovimientos = new ArrayAdapter(this, android.R.layout.simple_list_item_1,
+                            getResources().getStringArray(R.array.movimientos));
+                }
                 crossfade(listAtrib);
                 listAtrib.setAdapter(arrayMovimientos);
                 listAtrib.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -147,7 +152,9 @@ public class MainActivity extends AppCompatActivity {
                         cambiarAnimacionPred(position);
                     }
                 });
+                imageMario.setOnClickListener(null);
                 break;
+            //elegir animaciones con valores personalizados
             case R.id.opcion_anim_pers:
                 crossfade(editTiempo);
                 crossfade(editValorIni);
@@ -161,13 +168,21 @@ public class MainActivity extends AppCompatActivity {
                         movPosicion = position;
                     }
                 });
+                imageMario.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+                    @Override
+                    public void onClick(View v) {
+                        empezarAnimacion();
+                    }
+                });
+                mostrarInstrucciones("Pulsa en la imagen para iniciar la animación. ");
                 break;
 
         }
         return super.onContextItemSelected(item);
     }
 
-
+    //animaciones de crossfade para las vistas
     private void crossfade(View vista) {
         int duracionAnimacion = 500;
 
@@ -176,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         vista.animate().alpha(1f).setDuration(duracionAnimacion).setListener(null);
     }
 
+    //metodo llamado por ListView con interpoladores cargados
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void cambiarInterpolador(int position) {
         switch (position) {
@@ -198,12 +214,9 @@ public class MainActivity extends AppCompatActivity {
                 interpolador = new LinearInterpolator();
                 break;
             case 6:
-                interpolador = new CycleInterpolator(10);
-                break;
-            case 7:
                 interpolador = new DecelerateInterpolator();
                 break;
-            case 8:
+            case 7:
                 interpolador = new OvershootInterpolator();
                 break;
             default:
@@ -211,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //método llamado por ListView con animaciones predeterminadas cargadas
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void cambiarAnimacionPred(int position) {
         switch (position) {
@@ -241,12 +255,22 @@ public class MainActivity extends AppCompatActivity {
             default:
                 animacion = ObjectAnimator.ofFloat(imageMario, View.X, 0, 1000);
         }
+        imageMario.setOnClickListener(null);
         cambiarInterpolador(interpolPosicion);
         animacion.setInterpolator(interpolador);
         animacion.setDuration(2500);
         animacion.start();
+        Snackbar cancelar = Snackbar.make(imageMario, "Pulsa para cancelar animación.", Snackbar.LENGTH_SHORT);
+        cancelar.setAction("Cancelar", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animacion.cancel();
+            }
+        });
+        cancelar.show();
     }
 
+    //método llamado por ListView con animaciones con valores personalizados
     public void cambiarAnimacion(int position) {
         switch (position) {
             case 0:
@@ -278,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Inicia la animación con valores personalizados
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void empezarAnimacion() {
         try {
@@ -306,7 +331,36 @@ public class MainActivity extends AppCompatActivity {
         animacion.setDuration(tiempo);
         animacion.setInterpolator(interpolador);
         animacion.start();
+    }
+
+    //Muestra Snackbar con opcion de cancelar animacion
+    public void cancelarAnimacion() {
         Snackbar cancelar = Snackbar.make(imageMario, "Cancelar animación", Snackbar.LENGTH_SHORT);
+        cancelar.setAction("Cancelar", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animacion.cancel();
+            }
+        });
         cancelar.show();
     }
+
+    //muestra un Snackbar con las instrucciones de manejo de las vistas
+    public void mostrarInstrucciones(String mensaje) {
+        Snackbar instrucciones = Snackbar.make(imageMario, mensaje, 5000);
+        instrucciones.setAction("Entendido", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        instrucciones.show();
+    }
+
+    AnimatorListenerAdapter animListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            super.onAnimationCancel(animation);
+        }
+    };
 }

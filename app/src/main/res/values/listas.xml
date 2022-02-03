@@ -7,7 +7,6 @@
         <item>AnticipateOvershootInterpolator</item>
         <item>BounceInterpolator</item>
         <item>LinearInterpolator</item>
-        <item>CycleInterpolator</item>
         <item>DecelerateInterpolator</item>
         <item>OvershootInterpolator</item>
     </array>
