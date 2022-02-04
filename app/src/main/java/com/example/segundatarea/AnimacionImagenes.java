@@ -4,17 +4,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 public class AnimacionImagenes extends AppCompatActivity {
+
+    ImageView imageDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_animacion_imagenes);
+
+        imageDrawable = findViewById(R.id.imageDrawable);
+        imageDrawable.setBackgroundResource(R.drawable.run_animation);
+        AnimationDrawable animacion = (AnimationDrawable) imageDrawable.getBackground();
+        animacion.start();
     }
 
     @Override
@@ -22,6 +32,7 @@ public class AnimacionImagenes extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_opciones, menu);
         menu.removeItem(R.id.opcion_animacion_imag);
+        menu.removeItem(R.id.opcion_restablecer);
         return true;
     }
 

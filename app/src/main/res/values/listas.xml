@@ -20,7 +20,17 @@
         <item>SCALE_Y</item>
         <item>X</item>
         <item>Y</item>
-        <item>Escalar</item>
+    </array>
+
+    <array name="animaciones">
+        <item>Run</item>
+        <item>ROTATION</item>
+        <item>ROTATION_X</item>
+        <item>ROTATION_Y</item>
+        <item>SCALE_X</item>
+        <item>SCALE_Y</item>
+        <item>X</item>
+        <item>Y</item>
     </array>
 
 </resources>

@@ -3,6 +3,8 @@ package com.example.segundatarea;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Constraints;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -15,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
@@ -23,6 +26,7 @@ import android.view.animation.BaseInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
@@ -36,9 +40,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
-    float valorIni = 0f;
-    float valorFin = 2f;
-    int tiempo = 1000;
+    float valorIni;
+    float valorFin;
+    int tiempo;
 
     int interpolPosicion = -1;
     int movPosicion = -1;
@@ -49,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter arrayMovimientos, arrayInterpol;
     ObjectAnimator animacion;
     BaseInterpolator interpolador;
+
+    float posicionX;
+    float posicionY;
+    ViewGroup.LayoutParams parametros;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +83,12 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         imageMario = findViewById(R.id.imageMario);
+        posicionX = imageMario.getX();
+        posicionY = imageMario.getY();
+        parametros = imageMario.getLayoutParams();
         registerForContextMenu(imageMario);
         mostrarInstrucciones("Mantén pulsado en la imagen para ver el menú de selección.");
+
     }
 
     //método creador del menu de opciones
@@ -112,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //selector de opciones del menú contextual
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -135,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
             //elegir animaciones predeterminadas
+
             case R.id.opcion_anim_predet:
                 editValorIni.setVisibility(View.INVISIBLE);
                 editValorFin.setVisibility(View.INVISIBLE);
@@ -154,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 imageMario.setOnClickListener(null);
                 break;
+
             //elegir animaciones con valores personalizados
             case R.id.opcion_anim_pers:
                 crossfade(editTiempo);
@@ -161,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
                 crossfade(editValorIni);
                 crossfade(editValorFin);
                 crossfade(listAtrib);
+                movPosicion = -1;
+                cambiarInterpolador(-1);
                 listAtrib.setAdapter(arrayMovimientos);
                 listAtrib.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -258,47 +275,38 @@ public class MainActivity extends AppCompatActivity {
         imageMario.setOnClickListener(null);
         cambiarInterpolador(interpolPosicion);
         animacion.setInterpolator(interpolador);
-        animacion.setDuration(2500);
+        animacion.setDuration(2000);
         animacion.start();
-        Snackbar cancelar = Snackbar.make(imageMario, "Pulsa para cancelar animación.", Snackbar.LENGTH_SHORT);
-        cancelar.setAction("Cancelar", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animacion.cancel();
-            }
-        });
-        cancelar.show();
+        cancelarAnimacion();
     }
 
     //método llamado por ListView con animaciones con valores personalizados
     public void cambiarAnimacion(int position) {
         switch (position) {
             case 0:
-                animacion = ObjectAnimator.ofFloat(imageMario, View.ALPHA, valorIni);
+                animacion = ObjectAnimator.ofFloat(imageMario, View.ALPHA, valorIni, valorFin);
                 break;
             case 1:
-                animacion = ObjectAnimator.ofFloat(imageMario, View.ROTATION, valorIni);
+                animacion = ObjectAnimator.ofFloat(imageMario, View.ROTATION, valorIni, valorFin);
                 break;
             case 2:
-                animacion=  ObjectAnimator.ofFloat(imageMario, View.ROTATION_X, valorIni);
+                animacion=  ObjectAnimator.ofFloat(imageMario, View.ROTATION_X, valorIni, valorFin);
                 break;
             case 3:
-                animacion = ObjectAnimator.ofFloat(imageMario, View.ROTATION_Y, valorIni);
+                animacion = ObjectAnimator.ofFloat(imageMario, View.ROTATION_Y, valorIni, valorFin);
                 break;
             case 4:
-                animacion = ObjectAnimator.ofFloat(imageMario, View.SCALE_X, valorIni);
+                animacion = ObjectAnimator.ofFloat(imageMario, View.SCALE_X, valorIni, valorFin);
                 break;
             case 5:
-                animacion = ObjectAnimator.ofFloat(imageMario, View.SCALE_Y, valorIni);
+                animacion = ObjectAnimator.ofFloat(imageMario, View.SCALE_Y, valorIni, valorFin);
                 break;
             case 6:
-                animacion = ObjectAnimator.ofFloat(imageMario, View.X, valorIni);
+                animacion = ObjectAnimator.ofFloat(imageMario, View.X, valorIni, valorFin);
                 break;
             case 7:
-                animacion = ObjectAnimator.ofFloat(imageMario, View.Y, valorIni);
+                animacion = ObjectAnimator.ofFloat(imageMario, View.Y, valorIni, valorFin);
                 break;
-            default:
-                animacion = ObjectAnimator.ofFloat(imageMario, View.X, valorIni);
         }
     }
 
@@ -306,36 +314,30 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void empezarAnimacion() {
         try {
-            if (String.valueOf(editTiempo.getText()).equals(""))
-                tiempo = 1000;
-            else
-                tiempo = Integer.parseInt(String.valueOf(editValorIni.getText()));
-
-            if (String.valueOf(editValorIni.getText()).equals(""))
-                valorIni = 0;
-            else
-                valorIni = Float.parseFloat(String.valueOf(editValorIni.getText()));
-
-            if (String.valueOf(editValorFin.getText()).equals(""))
-                valorFin = 0;
-            else {
-                valorFin = Float.parseFloat(String.valueOf(editValorFin.getText()));
-            }
-
+            tiempo = Integer.parseInt(String.valueOf(editTiempo.getText()));
+            valorIni = Float.parseFloat(String.valueOf(editValorIni.getText()));
+            valorFin = Float.parseFloat(String.valueOf(editValorFin.getText()));
+            cambiarAnimacion(movPosicion);
+            cambiarInterpolador(interpolPosicion);
+            animacion.setDuration(tiempo);
+            animacion.setInterpolator(interpolador);
+            animacion.start();
+            cancelarAnimacion();
+        } catch (NullPointerException npe) {
+            Toast.makeText(this, "Error: Selecciona primero una animación. ", Toast.LENGTH_SHORT).show();
+            npe.getStackTrace();
+        } catch (NumberFormatException nfe) {
+            Toast.makeText(this, "Error: faltan datos o no son correctos. ", Toast.LENGTH_SHORT).show();
+            nfe.getStackTrace();
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
-
-        cambiarAnimacion(movPosicion);
-        cambiarInterpolador(interpolPosicion);
-        animacion.setDuration(tiempo);
-        animacion.setInterpolator(interpolador);
-        animacion.start();
     }
 
     //Muestra Snackbar con opcion de cancelar animacion
     public void cancelarAnimacion() {
-        Snackbar cancelar = Snackbar.make(imageMario, "Cancelar animación", Snackbar.LENGTH_SHORT);
+        Snackbar cancelar = Snackbar.make(imageMario, "Cancelar animación", (int) animacion.getDuration());
         cancelar.setAction("Cancelar", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -347,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
 
     //muestra un Snackbar con las instrucciones de manejo de las vistas
     public void mostrarInstrucciones(String mensaje) {
-        Snackbar instrucciones = Snackbar.make(imageMario, mensaje, 5000);
+        Snackbar instrucciones = Snackbar.make(imageMario, mensaje, 7000);
         instrucciones.setAction("Entendido", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -357,10 +359,57 @@ public class MainActivity extends AppCompatActivity {
         instrucciones.show();
     }
 
+
     AnimatorListenerAdapter animListener = new AnimatorListenerAdapter() {
         @Override
         public void onAnimationCancel(Animator animation) {
             super.onAnimationCancel(animation);
         }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            super.onAnimationEnd(animation);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+            super.onAnimationRepeat(animation);
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+            super.onAnimationStart(animation);
+        }
+
+        @Override
+        public void onAnimationPause(Animator animation) {
+            super.onAnimationPause(animation);
+        }
+
+        @Override
+        public void onAnimationResume(Animator animation) {
+            super.onAnimationResume(animation);
+        }
     };
+
+    public void resetearVista() {
+        imageMario.setLayoutParams(parametros);
+        imageMario.setX(posicionX);
+        imageMario.setY(posicionY);
+        imageMario.setAlpha(1.0f);
+    }
+
+//    public void revertir() {
+//        animacion.setInterpolator(new ReverseInterpolator());
+//        animacion.setDuration(0);
+//        animacion.start();
+//    }
+
+//    public class ReverseInterpolator implements Interpolator {
+//        @Override
+//        public float getInterpolation(float paramFloat) {
+//            return Math.abs(paramFloat -1f);
+//        }
+//    }
+
 }
