@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/opcion_animacion_prop"
-        android:title="Animación de Propiedades" />
+        android:title="@string/menu_opciones_1" />
     <item
         android:id="@+id/opcion_animacion_imag"
-        android:title="Animación por Imágenes" />
+        android:title="@string/menu_opciones_2" />
     <item
         android:id="@+id/opcion_restablecer"
-        android:title="Restablecer vista" />
+        android:title="@string/menu_opciones_3" />
 </menu>

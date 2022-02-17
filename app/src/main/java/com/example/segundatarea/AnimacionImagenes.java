@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 public class AnimacionImagenes extends AppCompatActivity {
 
     ImageView imageDrawable;
+    AnimationDrawable animacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +25,7 @@ public class AnimacionImagenes extends AppCompatActivity {
 
         imageDrawable = findViewById(R.id.imageDrawable);
         imageDrawable.setBackgroundResource(R.drawable.run_animation);
-        AnimationDrawable animacion = (AnimationDrawable) imageDrawable.getBackground();
+        animacion = (AnimationDrawable) imageDrawable.getBackground();
         animacion.start();
     }
 

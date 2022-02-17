@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">SegundaTarea</string>
+    <string name="main_hint_1">Duracion...</string>
+    <string name="main_hint_2">P. inicio...</string>
+    <string name="main_hint_3">P. final...</string>
+    <string name="main_titulo">Animación de propiedades</string>
+    <string name="main_instruccion_1">Mantén pulsado en la imagen para abrir el menú de selección.</string>
+    <string name="main_instruccion_2">Pulsa en la imagen para iniciar la animación.</string>
+    <string name="main_cancelar">Pulsa para cancelar la animación.</string>
+    <string name="main_error_1">Error: Selecciona primero una animación.</string>
+    <string name="main_error_2">Error: faltan datos o no son correctos.</string>
+    <string name="main_snack_cancelar">Cancelar</string>
+    <string name="main_snack_entendido">Entendido</string>
+    <string name="menu_opciones_1">Animación por Propiedades</string>
+    <string name="menu_opciones_2">Animación por Imágenes</string>
+    <string name="menu_opciones_3">Restablecer vista</string>
+    <string name="menu_propiedades_1">Elegir interpolador</string>
+    <string name="menu_propiedades_2">Elegir anim. predeterminadas</string>
+    <string name="menu_propiedades_3">Elegir anim. personalizadas</string>
 </resources>

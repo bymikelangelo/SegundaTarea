@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/holo_purple"
     tools:context=".AnimacionImagenes">
 
     <TextView
         android:id="@+id/textTitulo2"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="122dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="122dp"
         android:text="Animación por imágenes"
         android:textAlignment="center"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,10 +34,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textTitulo2" />
 
-    <Spinner
-        android:id="@+id/spinnerAnimacion"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="420dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
